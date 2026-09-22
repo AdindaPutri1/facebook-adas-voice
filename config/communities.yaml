@@ -1,0 +1,81 @@
+communities:
+  jaecoo_j5:
+    - name: "Jaecoo J5 EV INDONESIA"
+      url: "https://www.facebook.com/groups/861576359777228"
+      type: "brand_owner_club"
+      enabled: true
+      accessibility: "public"
+      notes: "Verified by probe: group title 'Jaecoo J5 EV INDONESIA', 9.2k members. Pilot target community."
+    - name: "Jaecoo J5 Indonesia (Search)"
+      url: "https://www.facebook.com/search/top?q=jaecoo%20j5%20indonesia"
+      type: "search_source"
+      enabled: false
+      accessibility: "unknown"
+      notes: "Search results kept for reference; superseded by the verified J5 owner group."
+    - name: "Jaecoo J5 EV Indonesia (Search)"
+      url: "https://www.facebook.com/search/top?q=jaecoo%20j5%20ev%20indonesia"
+      type: "search_source"
+      enabled: false
+      accessibility: "unknown"
+      notes: "Search results kept for reference; superseded by the verified J5 owner group."
+    - name: "JFiver - Jaecoo J5 EV Owners (Search)"
+      url: "https://www.facebook.com/search/top?q=jfiver%20-%20jaecoo%20j5%20ev%20owners%20%26%20community%20indonesia"
+      type: "search_source"
+      enabled: false
+      accessibility: "unknown"
+      notes: "Search results kept for reference; superseded by the verified J5 owner group."
+
+  toyota_yaris:
+    - name: "Yaris Cross Community Indonesia (YCCI)"
+      url: "https://www.facebook.com/groups/331613226681705"
+      type: "brand_owner_club"
+      enabled: true
+      accessibility: "public"
+      notes: "Verified by probe: group title 'Yaris Cross Community Indonesia (YCCI)'."
+    - name: "Yaris Indonesia"
+      url: "https://www.facebook.com/groups/3405727692978517"
+      type: "model_community"
+      enabled: true
+      accessibility: "public"
+      notes: "Verified by probe: group title 'Yaris Indonesia'."
+
+  toyota_zenix:
+    - name: "Toyota Zenix owners Indonesia"
+      url: "https://www.facebook.com/groups/921208719233043"
+      type: "model_community"
+      enabled: true
+      accessibility: "public"
+      notes: "Verified by probe: group title 'Toyota Zenix owners Indonesia', admin Hendru Wijaya."
+
+  toyota_veloz:
+    - name: "VELOZ HYBRID INDONESIA"
+      url: "https://www.facebook.com/groups/1564504984994701"
+      type: "model_community"
+      enabled: true
+      accessibility: "public"
+      notes: "Verified by probe: group title 'VELOZ HYBRID INDONESIA'."
+
+  xpeng_g6:
+    - name: "Xpeng G6 Indonesia"
+      url: "https://www.facebook.com/groups/1757639348184159"
+      type: "model_community"
+      enabled: true
+      accessibility: "public"
+      notes: "Verified by probe: group title 'Xpeng G6 Indonesia'."
+
+  byd_sealion7:
+    - name: "BYD Sealion 7 Indonesia"
+      url: "https://www.facebook.com/groups/1739202836885108"
+      type: "model_community"
+      enabled: true
+      accessibility: "public"
+      notes: "Verified by probe: group title 'BYD Sealion 7 Indonesia'."
+    - name: "BYD Sealion 7 Owner Community"
+      url: "https://web.facebook.com/groups/2978746848951034"
+      type: "model_community"
+      enabled: true
+      accessibility: "public"
+      notes: "Added per research note; second BYD Sealion 7 community."
+
+default_accessibility: "unknown"
+discovery_log_enabled: true

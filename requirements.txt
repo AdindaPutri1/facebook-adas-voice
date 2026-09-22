@@ -1,0 +1,18 @@
+# Core
+PyYAML>=6.0
+pandas>=2.0
+openpyxl>=3.1
+
+# Facebook collector (optional, only needed for live Facebook scraping)
+selenium>=4.15
+webdriver-manager>=4.0
+
+# Optional: emoji stripping during cleaning
+emoji>=2.8
+
+# Testing
+pytest>=7.4
+
+# Dashboard (Streamlit)
+streamlit>=1.30
+plotly>=5.18

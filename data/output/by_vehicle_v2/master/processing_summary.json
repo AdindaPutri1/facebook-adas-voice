@@ -1,0 +1,151 @@
+{
+  "generated_at": "2026-09-22T06:42:22.231335+00:00",
+  "spec": "v2 reprocessing - no re-scraping; raw inputs untouched",
+  "master": {
+    "raw_union_rows": 14544,
+    "deduplicated_rows": 4556,
+    "dedup_report": {
+      "input_rows": 14544,
+      "duplicate_rows_removed": 9988,
+      "unique_rows_kept": 4556,
+      "dedup_rate_pct": 68.67,
+      "rows_with_record_id": 14544,
+      "primary_key": "record_id",
+      "fallback_key": [
+        "community",
+        "post_id",
+        "comment_id"
+      ]
+    }
+  },
+  "vehicles": {
+    "Jaecoo J5": {
+      "raw_records": 779,
+      "clean_records": 779,
+      "relevant_records": 0,
+      "candidate_records": 0,
+      "features": {
+        "UNKNOWN": 779
+      },
+      "communities": 4,
+      "unique_posts": 13,
+      "unique_comments": 760
+    },
+    "Toyota Yaris": {
+      "raw_records": 675,
+      "clean_records": 675,
+      "relevant_records": 0,
+      "candidate_records": 30,
+      "features": {
+        "UNKNOWN": 675
+      },
+      "communities": 2,
+      "unique_posts": 14,
+      "unique_comments": 661
+    },
+    "Toyota Zenix": {
+      "raw_records": 834,
+      "clean_records": 834,
+      "relevant_records": 10,
+      "candidate_records": 10,
+      "features": {
+        "UNKNOWN": 824,
+        "ACC": 10
+      },
+      "communities": 4,
+      "unique_posts": 16,
+      "unique_comments": 821
+    },
+    "Toyota Veloz": {
+      "raw_records": 601,
+      "clean_records": 601,
+      "relevant_records": 10,
+      "candidate_records": 55,
+      "features": {
+        "UNKNOWN": 582,
+        "ACC": 10,
+        "PDA": 9
+      },
+      "communities": 2,
+      "unique_posts": 13,
+      "unique_comments": 589
+    },
+    "XPeng G6": {
+      "raw_records": 58,
+      "clean_records": 58,
+      "relevant_records": 0,
+      "candidate_records": 1,
+      "features": {
+        "UNKNOWN": 57,
+        "ACC": 1
+      },
+      "communities": 1,
+      "unique_posts": 1,
+      "unique_comments": 57
+    },
+    "BYD Sealion 7": {
+      "raw_records": 1609,
+      "clean_records": 1609,
+      "relevant_records": 19,
+      "candidate_records": 20,
+      "features": {
+        "UNKNOWN": 1591,
+        "PDA": 16,
+        "ACC": 2
+      },
+      "communities": 3,
+      "unique_posts": 25,
+      "unique_comments": 1579
+    }
+  },
+  "vehicle_confidence": {
+    "medium": 3476,
+    "high": 1080
+  },
+  "adas": {
+    "candidate_records": 116,
+    "relevance": {
+      "not_relevant": 4440,
+      "uncertain": 77,
+      "relevant": 39
+    },
+    "relevant_records": 39,
+    "relevance_confidence": {
+      "": 4440,
+      "low": 77,
+      "medium": 26,
+      "high": 13
+    }
+  },
+  "analysis": {
+    "feature": {
+      "UNKNOWN": 4508,
+      "PDA": 25,
+      "ACC": 23
+    },
+    "evidence_type": {
+      "question": 21,
+      "uncertain": 18
+    },
+    "sentiment": {
+      "neutral": 38,
+      "positive": 1
+    },
+    "driving_scenario": {
+      "not_stated": 39
+    },
+    "smoothness": {
+      "not_stated": 38,
+      "smooth": 1
+    },
+    "expectation_mismatch": {
+      "unclear": 39
+    }
+  },
+  "unknown_or_review": 19,
+  "output_layout": {
+    "master": "master/{facebook_master_raw,facebook_master_deduplicated,facebook_master_clean,facebook_master_relevant,processing_summary}",
+    "per_vehicle": "<Vehicle>/{raw,clean,relevant,analyzed}.csv",
+    "combined": "combined/{all_vehicles_clean,all_vehicles_relevant,all_vehicles_analyzed}.csv"
+  }
+}

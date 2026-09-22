@@ -1,0 +1,37 @@
+{
+  "sources": [
+    "data/raw/raw_data_all.jsonl",
+    "data/raw/raw_data_run_20260917_223451_d693b9.csv",
+    "data/raw/raw_data_run_20260918_101427_89744d.csv",
+    "data/raw/raw_data_run_20260918_101715_601a04.csv",
+    "data/raw/raw_data_run_20260918_102948_3d1b49.csv",
+    "data/raw/raw_data_run_20260918_104118_296cf9.csv",
+    "data/raw/raw_data_run_20260918_105055_c59316.csv",
+    "data/raw/raw_data_run_20260921_151512_a922e8.csv",
+    "data/raw/raw_data_run_20260921_153904_29f0ec.csv",
+    "data/raw/raw_data_run_20260922_080726_7d2fac.csv",
+    "data/raw/raw_data_run_20260922_081723_83756e.csv",
+    "data/raw/raw_data_run_20260922_093653_b7c48f.csv",
+    "data/raw/raw_data_run_20260922_102339_7922f3.csv",
+    "data/raw/raw_data_run_20260922_111240_9ba1cb.csv",
+    "data/raw/raw_data_run_20260922_113758_0c18fb.csv",
+    "data/raw/raw_data_run_20260922_120424_911a9a.csv",
+    "data/raw/raw_data_run_20260922_123044_60fc56.csv"
+  ],
+  "source_count": 17,
+  "raw_rows_union": 14544,
+  "rows_with_record_id": 14544,
+  "unique_record_id": 4556,
+  "rows_removed_by_record_id": 9988,
+  "dup_by_record_id_pct": 68.67,
+  "unique_meta_key": 4320,
+  "additional_removed_by_meta": -236,
+  "unique_by_vehicle": {
+    "BYD Sealion 7": 1609,
+    "Jaecoo J5": 779,
+    "Toyota Veloz": 591,
+    "Toyota Yaris": 682,
+    "Toyota Zenix": 836,
+    "XPeng G6": 59
+  }
+}

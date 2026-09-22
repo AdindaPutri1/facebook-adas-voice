@@ -1,0 +1,7 @@
+﻿vehicle,vehicle_dir,raw_records,clean_records,relevant_records,candidate_records,features,communities,unique_posts,unique_comments
+Jaecoo J5,Jaecoo_J5,779,779,0,0,{'UNKNOWN': 779},4,13,760
+Toyota Yaris,Toyota_Yaris,675,675,0,30,{'UNKNOWN': 675},2,14,661
+Toyota Zenix,Toyota_Zenix,834,834,10,10,"{'UNKNOWN': 824, 'ACC': 10}",4,16,821
+Toyota Veloz,Toyota_Veloz,601,601,10,55,"{'UNKNOWN': 582, 'ACC': 10, 'PDA': 9}",2,13,589
+XPeng G6,XPeng_G6,58,58,0,1,"{'UNKNOWN': 57, 'ACC': 1}",1,1,57
+BYD Sealion 7,BYD_Sealion_7,1609,1609,19,20,"{'UNKNOWN': 1591, 'PDA': 16, 'ACC': 2}",3,25,1579

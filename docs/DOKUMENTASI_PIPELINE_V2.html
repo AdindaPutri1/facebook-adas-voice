@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Dokumentasi Teknis — Facebook ADAS Customer Voice (V2)</title>
+<style>
+  @page {
+    size: A4;
+    margin: 17mm 16mm 18mm 16mm;
+    @bottom-center { content: "Facebook ADAS Customer Voice — Dokumentasi Teknis V2 — halaman " counter(page) " / " counter(pages); font-size: 8pt; color: #888; }
+  }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", "Calibri", Arial, sans-serif; font-size: 10.2pt; color: #1f2430; line-height: 1.5; margin: 0; }
+  h1 { font-size: 20pt; color: #0f2f52; margin: 0 0 2px 0; }
+  h2 { font-size: 14pt; color: #0f2f52; border-bottom: 2px solid #dbe5f0; padding-bottom: 4px; margin: 22px 0 10px 0; }
+  h3 { font-size: 11.5pt; color: #20507a; margin: 16px 0 6px 0; }
+  p { margin: 6px 0; text-align: justify; }
+  ul, ol { margin: 6px 0 6px 22px; padding: 0; }
+  li { margin: 3px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 9.3pt; }
+  th, td { border: 1px solid #c9d4e0; padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: #eef3f9; color: #123; }
+  tr:nth-child(even) td { background: #fafcfe; }
+  code { font-family: "Cascadia Mono", Consolas, monospace; font-size: 8.8pt; background: #f3f5f8; border: 1px solid #e1e6ec; border-radius: 3px; padding: 0 3px; }
+  pre { background: #f6f8fb; border: 1px solid #dfe6ee; border-left: 4px solid #2f6fb0; border-radius: 4px; padding: 9px 11px; font-size: 8.6pt; line-height: 1.45; overflow: hidden; page-break-inside: avoid; }
+  pre code { background: none; border: none; padding: 0; }
+  .meta { color: #5a6b7f; font-size: 9.5pt; margin-bottom: 14px; }
+  .badge { display: inline-block; background: #e6f0fa; color: #1c4f86; border: 1px solid #b9d3ee; border-radius: 10px; padding: 1px 8px; font-size: 8.5pt; margin-right: 4px; }
+  .box { border: 1px solid #ced9e5; background: #fbfcfe; border-radius: 5px; padding: 8px 12px; margin: 8px 0; page-break-inside: avoid; }
+  .warn { border-left: 4px solid #c77d1e; background: #fdf6ec; }
+  .num { color: #20507a; font-weight: 600; }
+  .small { font-size: 8.8pt; color: #47586b; }
+  .kpi { background: #0f2f52; color: #fff; border-radius: 6px; padding: 10px 14px; margin: 10px 0; }
+  .kpi b { color: #9fd0ff; }
+  .tight { margin: 2px 0; }
+</style>
+</head>
+<body>
+
+<h1>Dokumentasi Teknis</h1>
+<div style="font-size:11.5pt; color:#20507a; font-weight:600;">Facebook ADAS Customer Voice — Pipeline V2</div>
+<div class="meta">Dokumentasi pembuatan kode &amp; cara kerja: pengumpulan data (scraping) → pembersihan → ekstraksi relevansi → visualisasi Streamlit.<br>
+Proyek: <b>facebook-adas-voice</b> · versi pipeline <b>v2.0</b> · tanggal akhir: 22 September 2026</div>
+
+<div class="kpi">
+  Ringkasan angka akhir detik ini: 6 kendaraan target · <b>14.544</b> raw record → <b>4.556</b> unik (dedup <b>68,67%</b>) → <b>116</b> kandidat ADAS → <b>39</b> relevan (PDA 25 / ACC 23) → <b>19</b> perlu review kendaraan · <b>116</b> tes otomatis lulus · <b>55/55</b> validasi final lulus.
+</div>
+
+<h2>1. Pendahuluan &amp; Tujuan</h2>
+<p>
+Proyek ini adalah riset <i>customer voice</i>: mengumpulkan diskusi komunitas Facebook
+tentang pengalaman nyata pengguna terhadap sistem ADAS — fokus pada <b>PDA</b> (Proactive
+Driving Assist) dan <b>ACC</b> (Adaptive Cruise Control) — untuk 6 kendaraan:
+Jaecoo J5, Toyota Yaris, Toyota Zenix, Toyota Veloz, XPeng G6, dan BYD Sealion 7.
+Tujuannya <b>bukan</b> penghitungan kata kunci, dan <b>bukan</b> perangkingan kendaraan;
+setiap baris harus dapat ditelusuri kembali ke sumbernya (URL/komunitas/post/komentar).
+</p>
+<p>
+Repositori memuat <b>dua lapisan kode</b> yang bekerja bersama:
+</p>
+<ul>
+  <li><b>Lapisan A — Scraper &amp; pipeline v1</b> (paket <code>src/</code>): pengumpulan data dari Facebook (Selenium), parsing, penyimpanan, pembersihan, dan klasifikasi berbasis aturan. Produk utamanya adalah artefak mentah di <code>data/raw/</code>.</li>
+  <li><b>Lapisan B — Pipeline reprocessing V2</b> (paket <code>scripts/</code>): membaca artefak yang sudah ada tanpa scraping ulang, lalu membangun dataset master + hasil analisis per kendaraan + dashboard Streamlit.</li>
+</ul>
+<p>Seluruh keluaran V2 berada di <code>data/output/by_vehicle_v2/</code>; file mentah <b>tidak pernah diubah</b>.</p>
+
+<h2>2. Arsitektur Umum</h2>
+<pre>
+ Facebook (akun sendiri, terotorisasi)
+   │  `python -m src.main --mode scrape --vehicle "Toyota Yaris"`
+   ▼
+ src/collectors (facebook_session + noise_filter ringan)
+   │  post → comment → reply (hierarki dipertahankan)
+   ▼
+ data/raw: raw_data_run_*.csv  +  raw_data_all.jsonl (append-only)
+ data/scraper_state.db (SQLite: registry dedup + resume)
+   │
+ ── Lapisan B: V2 reprocessing (scripts/, baca data/raw SAJA) ──────────
+   ▼
+ audit_facebook_datasets.py      → laporan data/audit/*.json,*.csv
+ build_master_dataset.py         → master/facebook_master_raw.csv        (14.544)
+ deduplicate_facebook_data.py    → master/facebook_master_deduplicated.csv (4.556)
+ clean_facebook_data.py          → master/facebook_master_clean.csv       (4.556)
+ classify_vehicle.py             → kolom vehicle_v2/confidence/reason (+ 19 review)
+ filter_adas_relevance.py        → 116 kandidat → 39 relevan / 77 uncertain
+ classify_experience.py          → fitur, subfitur, skenario, bukti, sentimen, dst.
+ split_by_vehicle.py             → per-kendaraan + combined + unknown_or_review.csv
+ generate_summary.py             → processing_summary.json + facebook_master_relevant.csv
+   ▼
+ Streamlit dashboard (streamlit_app.py) — 6 halaman, Plotly, unduhan CSV/XLSX
+</pre>
+
+<h2>3. Pengumpulan Data (Scraping)</h2>
+
+<h3>3.1 Prinsip akses yang sah</h3>
+<p>
+Scraper dirancang agar <b>tidak pernah</b> melewati login wall. Hanya konten yang
+dapat dilihat oleh akun pemilik yang dikumpulkan; tidak ada teknik stealth/evasion;
+CAPTCHA dan kredensial login (<code>--mode login</code>) selalu diisi manual oleh
+pengguna. Jika platform mendeteksi sesi tidak terautentikasi, collector melempar
+<code>AuthenticationError</code>, berhenti, dan menyimpan tangkapan layar + DOM ke
+<code>logs/debug/</code> tanpa menutup data yang sudah terkumpul.
+</p>
+<ul>
+  <li><code>python -m src.main --mode login</code> — membuka Chrome terlihat; pengguna login manual sekali; sesi disimpan sebagai profil Chrome di <code>data/browser_profiles/facebook/</code> (dipakai ulang otomatis, termasuk mode headless) dan cookies di <code>data/cookies_facebook.json</code>.</li>
+  <li>Alternatif: isi <code>FACEBOOK_COOKIES_FILE</code> di <code>.env</code> dengan ekspor cookies dari sesi sah sendiri.</li>
+</ul>
+
+<h3>3.2 Proses koleksi (src/collectors/facebook_collector.py)</h3>
+<p>
+Collector berjalan <i>human-paced</i> (scroll dengan jeda), memuat halaman komunitas,
+lalu menyelami hirarki <b>post → komentar → balasan</b>. Pengaturan utama ada di
+<code>config/settings.yaml</code>:
+</p>
+<table>
+  <tr><th>Kunci</th><th>Nilai</th><th>Fungsi</th></tr>
+  <tr><td><code>collection.max_posts</code></td><td>1500</td><td>Batas jumlah post per komunitas</td></tr>
+  <tr><td><code>collection.max_comments_per_post</code></td><td>60</td><td>Batas komentar per post</td></tr>
+  <tr><td><code>collection.max_replies_per_comment</code></td><td>4</td><td>Batas balasan per komentar</td></tr>
+  <tr><td><code>collection.history_since</code></td><td>2022-01-01</td><td>Post lebih tua diabaikan (heuristik waktu)</td></tr>
+  <tr><td><code>collection.scroll_max_attempts</code> / <code>scroll_pause_seconds</code></td><td>500 / 1.5</td><td>Kontrol kecepatan dan ketahanan scroll</td></tr>
+  <tr><td><code>collection.retry_max</code> / <code>retry_backoff_base_seconds</code></td><td>3 / 2</td><td>Retry dengan backoff eksponensial</td></tr>
+  <tr><td><code>collection.headless</code></td><td>true</td><td>Mode tanpa jendela saat sudah ada profil</td></tr>
+</table>
+
+<h3>3.3 Penyaringan noise ringan saat scrape</h3>
+<p>
+Sebelum disimpan, teks lewat <code>src/collectors/noise_filter.py</code> yang
+<b>konservatif</b>: membuang iklan/penjualan yang jelas, spam/ajakan kontak, dan teks
+asing yang sangat jelas. Teks ambigu <b>tidak</b> dibuang agar keputusan akhir
+diserahkan ke tahap pembersihan. Setiap pembuangan tercatat sebagai statistik di log
+pipeline (<code>noise_dropped</code>).
+</p>
+
+<h3>3.4 Penyimpanan (src/storage)</h3>
+<ul>
+  <li>Per run → <code>data/raw/raw_data_run_&lt;timestamp&gt;.csv</code> (17 artefak CSV)</li>
+  <li>Seluruh record → <code>data/raw/raw_data_all.jsonl</code> (append-only, satu JSON per baris)</li>
+  <li>SQLite <code>data/scraper_state.db</code> → registri post/komentar yang sudah diproses, sehingga re-run bersifat <b>idempotent</b> dan bisa <i>resume</i> (<code>python -m src.main --resume</code>).</li>
+</ul>
+<p>Struktur baris mentah diatur <code>src/models.py</code> dan mencakup <code>record_id</code>,
+<code>community</code>, <code>community_url</code>, <code>post_id</code>, <code>comment_id</code>,
+<code>parent_id</code>, <code>source_type</code>, <code>author_pseudonym</code>, <code>date</code>,
+<code>text_raw</code>, <code>url</code>, <code>scraped_at</code>. Identitas pengguna dianonimkan
+(<code>USER_xxxx</code>).</p>
+
+<h2>4. Audit Dataset (scripts/audit_facebook_datasets.py)</h2>
+<p>
+Langkah V2 pertama adalah <b>mencatat kondisi seluruh artefak mentah</b>: jumlah sumber
+(17 file: 16 CSV run + 1 JSONL), baris per sumber, kolom yang tersedia, cakupan
+per-kendaraan, dan konsistensi terhadap file final lama
+(<code>data/output/raw_data_final.csv</code>). Hasil audit ditulis ke
+<code>data/audit/</code>:
+<b>facebook_datasets_audit.csv/.json</b>, <b>master_union_report.json</b>,
+<b>dedup_report.json</b>, dan <b>split_report.json</b>. Audit menyimpulkan bahwa
+gabungan seluruh sumber = 14.544 baris dan setelah deduplikasi by identitas = 4.556
+unik — sama persis dengan jumlah file <code>raw_data_final.csv</code> lama namun
+dibangun ulang dari lapisan mentah (lebih dapat dipercaya).
+</p>
+
+<h2>5. Pembangunan Master &amp; Deduplikasi (scripts/build_master_dataset.py, deduplicate_facebook_data.py)</h2>
+
+<h3>5.1 Master dataset</h3>
+<p>
+<code>build_master_dataset.py</code> menggabungkan semua artefak di
+<code>data/raw/</code> (sesuai <code>config/analysis.yaml → master.raw_dirs</code>)
+menjadi <code>master/facebook_master_raw.csv</code> (14.544 baris, 17 sumber).
+Semua kolom dinormalisasi ke urutan standar <code>STD_COLUMNS</code> di
+<code>scripts/v2_common.py</code>; teks asli tetap di <code>text_raw</code> tanpa
+perubahan.
+</p>
+
+<h3>5.2 Deduplikasi</h3>
+<p>
+Kunci utama deduplikasi adalah <code>record_id</code>; bila kosong, dipakai
+<b>gabungan</b> <code>community | post_id | comment_id</code> (fallback). Setiap record
+yang bertahan diberi <code>dedup_key</code> untuk jejak audit. Hasil:
+<b>9.988 duplikat dibuang → 4.556 unik (laju dedup 68,67%)</b>.
+</p>
+<pre><code># config/analysis.yaml
+master:
+  raw_dirs: ["data/raw"]
+  dedup:
+    primary_key: "record_id"
+    fallback_key: ["community", "post_id", "comment_id"]
+  max_raw_rows_warning: 20000</code></pre>
+<div class="box warn">
+Catatan penting: dedup berbasis <b>identitas post/komentar</b>, bukan isi teks.
+Komentar dengan isi yang sama di thread berbeda tetap menjadi baris terpisah —
+ini dijelaskan di halaman <i>Data Quality</i> dashboard.
+</div>
+
+<h2>6. Pembersihan Teks (scripts/clean_facebook_data.py)</h2>
+<p>
+Tahap ini memakai pembersih inti dari lapisan A (<code>src/cleaners/text_cleaner.py</code>):
+de-URL, de-html, normalisasi spasi/whitespace, dan fungsi
+<code>normalize_lower</code> (huruf kecil + aksara/digit alfanumerik untuk pencocokan).
+Output menambah tiga kolom tanpa menyentuh sumber:
+</p>
+<ul>
+  <li><code>text_raw</code> — teks asli (immutable, selalu dipertahankan)</li>
+  <li><code>text_clean</code> — teks dibersihkan untuk tampilan/analisis</li>
+  <li><code>text_normalized</code> — teks ternormalisasi untuk pencocokan kata kunci</li>
+</ul>
+<p>Eksekusi mencatat jumlah baris yang menjadi kosong setelah pembersihan
+(hasil akhir: <b>0</b> baris kosong dari 4.556) dan menulis
+<code>master/facebook_master_clean.csv</code>.</p>
+
+<h2>7. Identifikasi Kendaraan (scripts/classify_vehicle.py + v2_common.py)</h2>
+<p>
+Klasifikasi kendaraan bersifat <b>kontekstual</b>, bukan sekadar menangkap satu kata.
+<code>v2_common</code> membangun pola alias per kendaraan dari
+<code>config/vehicles.yaml</code>:
+</p>
+<ul>
+  <li><b>Pola kuat (strong)</b> — nama kanonik, nama model, kombinasi <i>brand+model</i>
+       (mis. "byd sealion 7"), dan alias yang diawali brand atau berisi spasi/&gt; 5 huruf.</li>
+  <li><b>Pola pendek (short)</b> — alias singkat (mis. "zenix"); pola ini hanya memberi
+       bukti tingkat <i>medium</i>.</li>
+</ul>
+<p>Logika <code>classify_vehicle</code> (bentuk disederhanakan):</p>
+<pre><code>mentions = detect_vehicle_mentions(text, alias_patterns)
+src      = canonicalise_record_vehicle(record.vehicle)   # prior dari scraper (per komunitas)
+
+jika 1 kendaraan disebut  -> vehicle = itu; high (pola kuat) / medium (pola pendek)
+                              bila prior konflik -> tetap medium (alasan ...but_context)
+jika &gt;1 kendaraan        -> bila prior terdaftar -> prior (medium)  [konteks komunitas]
+                              bila tidak          -> unknown / low (conflicting)
+jika tidak ada mention    -> bila prior ada -> prior (medium)  [community_context]
+                              bila tidak     -> unknown / low  [no_signal]</code></pre>
+<p>
+Baris yang hasilnya <code>unknown</code>, confidence <code>low</code>, atau ber-potensi
+konflik (<code>vehicle_reason</code> memuat <code>but_context|conflicting</code>)
+dirutekan ke <code>unknown_or_review.csv</code> untuk ditinjau manual
+(<b>19 baris</b>). Sisa 4.537 baris terdistribusi ke 6 kendaraan.
+</p>
+
+<h2>8. Ekstraksi Relevansi ADAS (scripts/filter_adas_relevance.py)</h2>
+<p>
+Ini tahap paling penting dan dirancang agar <b>kata kunci ≠ kesimpulan</b>. Ada
+lapisan pencocokan berurutan yang direpresentasikan sebagai <code>LayerScorer</code> —
+sketsa kode:
+</p>
+<pre><code>class LayerScorer:
+    def __init__(self, keywords):
+        self.patterns = {
+            "layer_a_feature_names": ...  # "ACC", "PDA", "Adaptive Cruise Control"
+            "layer_b_functional":      ...  # "adaptive cruise", "blind spot monitor", ...
+            "layer_c_indonesian":      ...  # "otomatis ngerem", "ngemudii sendiri", ...
+            "combined_adas":           ...  # "ADAS", "fitur keselamatan", ...
+        }
+    def match(self, text) -> (dict_hits, list_matched):
+        ...
+    def classify(self, hits, text) -> (relevance, confidence, reason, feature_hint)</code></pre>
+<table>
+  <tr><th>Situasi</th><th>Label relevansi</th><th>Contoh</th></tr>
+  <tr><td>Layer A (nama fitur eksplisit)</td><td>relevan (kadang perlu teks &gt; batas)</td><td>"ACC-nya enak dipakai di tol"</td></tr>
+  <tr><td>Layer B / C (fungsional/RI)</td><td>relevan bila teks cukup panjang</td><td>"mobilnya ngerem sendiri di tanjakan"</td></tr>
+  <tr><td>Hanya <code>combined_adas</code> (generik)</td><td>uncertain</td><td>"mobil ini fitur ADAS-nya lengkap"</td></tr>
+  <tr><td>Tidak ada hit</td><td>not_relevant (bukan kandidat)</td><td>"harga ban berapa kak"</td></tr>
+</table>
+<p>
+Setiap catatan relevan/uncertain menyimpan jejak: <code>keyword_hits</code>,
+<code>relevance_reason</code>, <code>relevance_confidence</code>, dan
+<code>feature_hint</code>. Pola noise yang <b>sengaja diselepkan</b> dari
+kandidat/relevan:
+</p>
+<ul>
+  <li><b>Persetujuan admin pasar daring</b> — pola <code>izin ACC mas admin</code> berlabel <code>not_relevant</code> (rase yang biasanya adalah konfirmasi iklan, bukan suara pengemudi).</li>
+  <li><b>Akronim kota vs fitur</b> — <code>BSD</code> (Blind Spot Detection) berbenturan dengan nama kota Bintaro Serpong Damai &amp; kawasan sekitarnya (bintaro/depok/ciputat/tangerang/serpong) → demosi ke <code>not_relevant</code>/uncertain.</li>
+  <li><b>Frasa kosmetik</b> — "baret halus", "goresan halus", "PPF/paint protection" → demosi ke <code>uncertain</code>.</li>
+  <li><b>"follow"</b> dihapus dari daftar fungsional ACC karena kontaminasi media sosial (mis. "follow Instagram", bukan pengaturan jarak).</li>
+</ul>
+<p>Hasil akhir: <b>116 kandidat</b> → <b>39 relevan</b>, <b>77 uncertain</b>,
+<b>4.440 not_relevant</b>.</p>
+
+<h2>9. Klasifikasi Pengalaman (scripts/classify_experience.py)</h2>
+<p>
+Untuk seluruh kandidat, pipeline memanggil klasifikator softule dari lapisan A
+(<code>src/classifiers/feature_classifier.py</code>,
+<code>src/classifiers/experience_classifier.py</code>) dengan taksonomi
+<code>config/taxonomy.yaml</code>:
+</p>
+<ul>
+  <li><b>feature</b> — dibatasi ke <code>PDA | ACC | PDA+ACC | ADAS_OTHER | UNKNOWN</code> (atas DST <code>analysis.yaml) </code></li>
+  <li><b>subfeature</b> — per PDA/ACC (mis. <code>PDA:curve_assistance</code>, <code>PDA:braking</code>, <code>ACC:smoothness</code>)</li>
+  <li><b>driving_scenario</b> — tol/highway, macet, stop-and-go, cut-in, dll.</li>
+  <li><b>evidence_type</b> — direct_experience, opinion, question, hearsay, specification, uncertain</li>
+  <li><b>sentiment</b> — positive, neutral, negative, mixed</li>
+  <li><b>smoothness</b> — smooth / slightly_abrupt / abrupt / very_abrupt / not_stated</li>
+  <li><b>expectation_mismatch</b> — yes / no / unclear</li>
+  <li><b>feature_confidence</b> — tinggi/sedang/rendah (jejak alasan)</li>
+</ul>
+<p>
+Kolom analisis ini hanya diisi untuk kandidat; selain itu memakai nilai default
+(<code>UNKNOWN</code>/<code>not_stated</code>) supaya distribusi tidak membingungkan.
+Distribusi fitur saat ini: <b>PDA 25, ACC 23</b>, sisanya UNKNOWN (bukan kandidat).
+Untuk subset relevan (39): subfitur <code>PDA:curve_assistance</code> 14,
+<b>not_stated</b> 13, <code>PDA:braking</code> 10, <code>ACC:smoothness</code> 1,
+<code>ACC:braking</code> 1.</p>
+
+<h2>10. Pemisahan per Kendaraan &amp; Ringkasan (scripts/split_by_vehicle.py, generate_summary.py)</h2>
+<p>
+<code>split_by_vehicle.py</code> memecah <code>facebook_master_clean.csv</code> menurut
+<code>vehicle_v2</code> dan menulis untuk 6 kendaraan file <code>raw.csv</code>
+(tanpa kolom analisis), <code>clean.csv</code>, <code>relevant.csv</code>, dan
+<code>analyzed.csv</code> (relevan + kolom analisis). Gabungan semua kendaraan
+ditulis ke <code>combined/all_vehicles_{clean,relevant,analyzed}.csv</code>, serta
+<code>unknown_or_review.csv</code> dan <code>vehicle_summary.csv</code>.
+</p>
+<p>
+<code>generate_summary.py</code> merangkum semuanya ke
+<code>master/processing_summary.json</code> dan menulis
+<code>master/facebook_master_relevant.csv</code> (kumpulan relevan lintas kendaraan).
+Komposisi relevan saat ini:
+</p>
+<table>
+  <tr><th>Kendaraan</th><th>Raw (unik)</th><th>Kandidat</th><th>Relevan</th></tr>
+  <tr><td>BYD Sealion 7</td><td>1.609</td><td>—</td><td class="num">19</td></tr>
+  <tr><td>Toyota Veloz</td><td>601</td><td>—</td><td class="num">10</td></tr>
+  <tr><td>Toyota Zenix</td><td>834</td><td>—</td><td class="num">10</td></tr>
+  <tr><td>Jaecoo J5</td><td>779</td><td>—</td><td>0</td></tr>
+  <tr><td>Toyota Yaris</td><td>675</td><td>—</td><td>0</td></tr>
+  <tr><td>XPeng G6</td><td>58</td><td>—</td><td>0</td></tr>
+  <tr><td><b>Total unik</b></td><td><b>4.556</b></td><td><b>116</b></td><td><b>39</b></td></tr>
+</table>
+<p class="small">Perlu diingat: angka ini adalah <i>snapshot</i> kondisi data saat ini.
+Sebagian kendaraan bernilai 0 relevan karena diskusi yang ada ternyata bernuansa
+iklan/admin ("izin ACC mas admin") atau kosmetik, bukan pengalaman ADAS — hasil yang
+jujur, bukan artefak algoritma.</p>
+
+<h2>11. Visualisasi Streamlit (streamlit_app.py)</h2>
+<p>
+Dashboard dibangun dengan Streamlit + Plotly dan <b>hanya membaca file output nyata</b>
+(wajib tanpa angka hardcode). Data dimuat dengan <code>@st.cache_data</code>:
+<code>processing_summary.json</code>, <code>all_vehicles_clean.csv</code>,
+<code>all_vehicles_analyzed.csv</code>, <code>unknown_or_review.csv</code>,
+<code>vehicle_summary.csv</code>.
+</p>
+<pre><code>streamlit run streamlit_app.py     # buka http://localhost:8501</code></pre>
+<p>Enam halaman yang bisa dipilih lewat radio horizontal:</p>
+<table>
+  <tr><th>Halaman</th><th>Isi</th></tr>
+  <tr><td><b>Overview</b></td><td>KPI (unik, kandidat, relevan, review, % dedup) + bar per kendaraan + donut fitur + donut tipe bukti + unduh master</td></tr>
+  <tr><td><b>Detail Kendaraan</b></td><td>Pilih kendaraan → KPI, donut fitur, bar per komunitas, sentimen suara pelanggan, tabel catatan relevan + unduh</td></tr>
+  <tr><td><b>PDA</b></td><td>Mention PDA per kendaraan, tipe bukti, sentimen, tabel + unduh</td></tr>
+  <tr><td><b>ACC</b></td><td>Idem, untuk ACC</td></tr>
+  <tr><td><b>Customer Voice</b></td><td>Kutipan per baris (kartu senada), metrik evidence type, donut sentimen, unduh CSV/XLSX</td></tr>
+  <tr><td><b>Data Quality</b></td><td>Confidence kendaraan, alasan relevansi, pola teks repetitif (duplikasi konten), tabel review <code>unknown_or_review</code></td></tr>
+</table>
+<p>
+Sidebar menyediakan <b>filter</b>: kendaraan, fitur, sentimen, tipe bukti (semuanya
+dalam urutan taksonomi tetap), plus pencarian kata kunci bebas di teks. Unduhan
+mendukung CSV (<code>utf-8-sig</code> agar kompatibel Excel) dan XLSX bila
+<code>openpyxl</code> tersedia. Desain sengaja <b>tanpa ranking</b> antar kendaraan
+dan menaruh catatan bahwa jumlah komentar tidak merepresentasikan kualitas ADAS.
+</p>
+
+<h2>12. Pengujian &amp; Validasi</h2>
+<ul>
+  <li><b>Unit/regresi</b> — <code>pytest</code>: 116 tes lulus, mencakup pencocokan kata
+       kunci, identifikasi kendaraan, deduplikasi, pembersihan, klasifikasi fitur,
+       filter noise, dan tes spesifik V2 (<code>tests/test_v2_*.py</code>).</li>
+  <li><b>Validasi final otomatis</b> — <code>scripts/validate_pipeline.py</code>:
+      <b>55/55 cek lulus</b> — keberadaan file, jumlah baris master/dedup/clean,
+      keunikan kunci, kelengkapan 6 kendaraan + <code>unknown</code>, nilai enum yang
+      sah (fitur/bukti/sentimen/confidence), konsistensi gabungan vs per-kendaraan,
+      dan keterbacaan laporan.</li>
+</ul>
+<h2>13. Cara Menjalankan Pipeline V2</h2>
+<pre><code># Uji regresi
+.\.venv\Scripts\python.exe -m pytest tests/ -q
+
+# Pipeline penuh (semua tahap; log di logs/pipeline_v2_*.log)
+.\.venv\Scripts\python.exe scripts\run_pipeline.py
+
+# Paksa ulang semua tahap, atau jalankan satu tahap saja
+.\.venv\Scripts\python.exe scripts\run_pipeline.py --force
+.\.venv\Scripts\python.exe scripts\run_pipeline.py --stage clean
+
+# Validasi final 55 cek
+.\.venv\Scripts\python.exe scripts\validate_pipeline.py
+
+# Dashboard
+streamlit run streamlit_app.py</code></pre>
+
+<h2>14. Keterbatasan &amp; Catatan Penutup</h2>
+<ul>
+  <li>Dedup berbasis identitas post/komentar — teks identik di thread yang berbeda tetap dihitung terpisah.</li>
+  <li>Klasifikasi berbasis aturan + taksonomi (bukan model bahasa); tinjauan manual disarankan pada <code>unknown_or_review.csv</code>, <code>relevant.csv</code>, dan kolom <code>*_reason</code>.</li>
+  <li>Dataset mewakili diskusi komunitas yang <b>terjangkau</b>, bukan populasi pengguna; angka bukan proksi kualitas ADAS.</li>
+  <li>Menjalankan ulang <code>run_pipeline.py</code> setelah menambah sumber raw akan memperbarui seluruh angka snapshot.</li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+project:
+  name: "facebook-adas-voice"
+  version: "0.1.0"
+  scraper_version: "0.1.0"
+  config_version: "v1"
+  keyword_version: "v1"
+  taxonomy_version: "v1"
+
+pilot:
+  vehicle: "Jaecoo J5"
+  max_posts: 50
+  max_comments_per_post: 40
+  max_replies_per_comment: 25
+  data_source: "facebook"
+  community: "Jaecoo J5 Indonesia (Mock)"
+
+collection:
+  data_source: "facebook"  # facebook | mock | api_adapter
+  max_posts: 1500
+  max_comments_per_post: 60
+  max_replies_per_comment: 4  # collect replies up to this many per comment
+  scroll_max_attempts: 500
+  scroll_pause_seconds: 1.5
+  max_seconds_per_community: 1500
+  history_since: "2022-01-01"  # drop posts older than this (approx via timestamp heuristics)
+  page_load_timeout_seconds: 90
+  page_scroll_strategy: "eager"
+  headless: true
+  retry_max: 3
+  retry_backoff_base_seconds: 2
+  min_authorized_only: true
+
+# Lightweight in-scrape noise filter: drops obvious ad/sales/spam/contact and
+# clearly-foreign text before it enters the raw dataset. Conservative by
+# design - ambiguous text is kept so the LLM cleaning stage can decide later.
+noise_filter:
+  enabled: true
+  drop_ads: true
+  drop_sales: true
+  drop_spam_contact: true
+  drop_foreign: true
+  note: "heuristic only; audit trail via pipeline stats/logs (noise_dropped)"
+
+processing:
+  min_text_length: 15
+  min_post_text_length: 40
+  dedup_hash_columns: ["community", "post_id", "comment_id"]
+  output_formats: ["csv", "xlsx", "json"]
+
+# LLM-based labeling (optional). Used ONLY by `python -m src.main --mode enhance`.
+# The rule-based labeler is the default production path; LLM labels are stored
+# with labeler=llm and validated against the same enum constraints.
+#
+# provider options:
+#   - azure:              Azure OpenAI. Requires endpoint, deployment and the API
+#                         key via env (api_key_env). Model id falls back to deployment.
+#   - openai_compatible:  Any OpenAI-compatible server (local Ollama, OpenRouter,
+#                         OpenAI, ...). endpoint may omit /v1; /v1 is appended
+#                         automatically unless already present. api_key is optional
+#                         (Ollama runs without one; OpenRouter needs OPENROUTER_API_KEY).
+#   - google_gemini:      Gemini OpenAI-compatible gateway (free tier available).
+llm:
+  enabled: true
+  provider: "openai_compatible"        # azure | openai_compatible | google_gemini
+  endpoint: "https://openrouter.ai/api/v1"  # OpenRouter OpenAI-compatible API
+  deployment: "nex-agi/nex-n2.5-pro:free"   # free tier; Qwen (qwen/qwen3.8-27b:free) bila pool tidak 429
+  model: "nex-agi/nex-n2.5-pro:free"        # :free suffix = no billing; swap slug anytime
+  api_version: "2024-06-01"
+  api_key_env: "OPENROUTER_API_KEY"    # keep the key in .env, never in code
+  temperature: 0
+  timeout_seconds: 600
+  batch_size: 8                   # texts per API call (amortizes prompt cost)
+  max_retries: 4                  # 429/5xx retries before rule-based fallback
+  retry_base_seconds: 2           # exponential backoff base; fail fast when a free pool is 429-ing
+  scope: "candidates"          # 'candidates' | 'all' (candidates = rule-flagged ADAS records)
+  cache_file: "data/llm_cache.jsonl"
+
+paths:
+  data_dir: "data"
+  logs_dir: "logs"
+  raw_dir: "data/raw"
+  clean_dir: "data/clean"
+  filtered_dir: "data/filtered"
+  labeled_dir: "data/labeled"
+  output_dir: "data/output"
+
+state_db: "data/scraper_state.db"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+  structured: true

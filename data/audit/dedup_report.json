@@ -1,0 +1,13 @@
+{
+  "input_rows": 14544,
+  "duplicate_rows_removed": 9988,
+  "unique_rows_kept": 4556,
+  "dedup_rate_pct": 68.67,
+  "rows_with_record_id": 14544,
+  "primary_key": "record_id",
+  "fallback_key": [
+    "community",
+    "post_id",
+    "comment_id"
+  ]
+}

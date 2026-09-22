@@ -1,0 +1,448 @@
+feature_taxonomy:
+  PDA:
+    subfeatures:
+      - "speed_reduction"
+      - "curve_assistance"
+      - "vehicle_response"
+      - "pedestrian_response"
+      - "acceleration"
+      - "braking"
+      - "smoothness"
+    subfeature_keywords:
+      speed_reduction:
+        - "slow down"
+        - "reduce speed"
+        - "decelerate"
+        - "melambat"
+        - "ngurangin kecepatan"
+      curve_assistance:
+        - "curve"
+        - "corner"
+        - "turn"
+        - "tikungan"
+        - "belok"
+        - "ikut tikungan"
+      vehicle_response:
+        - "vehicle ahead"
+        - "mobil depan"
+        - "kendaraan depan"
+        - "respon mobil"
+      pedestrian_response:
+        - "pedestrian"
+        - "pejalan kaki"
+        - "pengendara motor"
+        - "motor"
+      acceleration:
+        - "accelerate"
+        - "akselerasi"
+        - "gas"
+        - "tambah kecepatan"
+      braking:
+        - "brake"
+        - "ngerem"
+        - "rem"
+        - "pengereman"
+      smoothness:
+        - "smooth"
+        - "halus"
+        - "nyentak"
+        - "jedug"
+        - "mendadak"
+        - "maksa"
+
+  ACC:
+    subfeatures:
+      - "following"
+      - "following_distance"
+      - "acceleration"
+      - "deceleration"
+      - "braking"
+      - "stop_and_go"
+      - "cut_in"
+      - "cut_out"
+      - "lead_vehicle_braking"
+      - "lead_vehicle_accelerating"
+      - "lane_change"
+      - "smoothness"
+    subfeature_keywords:
+      following:
+        - "follow"
+        - "ngikut"
+        - "ikut mobil"
+        - "mengikuti"
+        - "ngikut mobil depan"
+      following_distance:
+        - "following distance"
+        - "jaga jarak"
+        - "jarak aman"
+        - "distance"
+        - "gap"
+      acceleration:
+        - "accelerate"
+        - "acceleration"
+        - "akselerasi"
+        - "gas"
+        - "tambah kecepatan"
+        - "cepet"
+      deceleration:
+        - "decelerate"
+        - "deceleration"
+        - "deselerasi"
+        - "melambat"
+        - "ngurangin kecepatan"
+      braking:
+        - "brake"
+        - "braking"
+        - "ngerem"
+        - "rem"
+        - "pengereman"
+        - "ngerem mendadak"
+      stop_and_go:
+        - "stop and go"
+        - "stop-and-go"
+        - "berhenti jalan"
+        - "macet"
+        - "kemacetan"
+        - "traffic jam"
+      cut_in:
+        - "cut in"
+        - "cut-in"
+        - "potong jalur"
+        - "masuk depan"
+        - "nyalip"
+      cut_out:
+        - "cut out"
+        - "cut-out"
+        - "pindah jalur"
+        - "keluar jalur"
+        - "minggir"
+      lead_vehicle_braking:
+        - "mobil depan ngerem"
+        - "mobil depan rem"
+        - "depan berhenti"
+        - "lead vehicle brake"
+      lead_vehicle_accelerating:
+        - "mobil depan gas"
+        - "mobil depan ngebut"
+        - "lead vehicle accelerate"
+      lane_change:
+        - "lane change"
+        - "pindah jalur"
+        - "ganti jalur"
+        - "berpindah jalur"
+      smoothness:
+        - "smooth"
+        - "halus"
+        - "nyentak"
+        - "jedug"
+        - "mendadak"
+        - "maksa"
+        - "tiba-tiba cepat"
+
+  LCC:
+    subfeatures:
+      - "centering"
+      - "curve_support"
+      - "smoothness"
+    subfeature_keywords:
+      centering:
+        - "tengah jalur"
+        - "tengah lajur"
+        - "lane centering"
+        - "center the lane"
+        - "di tengah"
+      curve_support:
+        - "tikungan"
+        - "curve"
+        - "belok"
+        - "ikut belokan"
+      smoothness:
+        - "halus"
+        - "nyentak"
+        - "maksanya"
+        - "overdrive"
+
+  LKA:
+    subfeatures:
+      - "lane_keeping"
+      - "correction"
+      - "inactive"
+    subfeature_keywords:
+      lane_keeping:
+        - "tetap di jalur"
+        - "stay in lane"
+        - "lurus sendiri"
+        - "dijaga jalurnya"
+      correction:
+        - "dikoreksi setir"
+        - "setir kembali"
+        - "dibetulkan"
+        - "balik ke jalur"
+      inactive:
+        - "nggak aktif"
+        - "tidak aktif"
+        - "jarang aktif"
+        - "ngga berfungsi"
+
+  LDW:
+    subfeatures:
+      - "departure_warning"
+      - "false_alarm"
+    subfeature_keywords:
+      departure_warning:
+        - "peringatan keluar jalur"
+        - "getar stir"
+        - "keluar lajur dibeep"
+        - "warning keluar jalur"
+      false_alarm:
+        - "sering ngalarm"
+        - "sering berbunyi"
+        - "alarm palsu"
+        - "halo halo"
+
+  LDP:
+    subfeatures:
+      - "prevention"
+    subfeature_keywords:
+      prevention:
+        - "dicegah keluar"
+        - "dikoreksi sebelum keluar"
+        - "langsung diperbaiki"
+
+  ELK:
+    subfeatures:
+      - "emergency_intervention"
+    subfeature_keywords:
+      emergency_intervention:
+        - "darurat"
+        - "emergency"
+        - "mendadak dijaga"
+
+  AEB:
+    subfeatures:
+      - "pedestrian"
+      - "vehicle"
+      - "braking"
+      - "false_positive"
+    subfeature_keywords:
+      pedestrian:
+        - "pejalan kaki"
+        - "pedestrian"
+        - "motor"
+        - "pengendara motor"
+      vehicle:
+        - "mobil depan"
+        - "kendaraan depan"
+        - "truk"
+        - "vehicle ahead"
+      braking:
+        - "ngerem penuh"
+        - "brake"
+        - "pengereman"
+        - "reme darurat"
+      false_positive:
+        - "sering bunyi"
+        - "ngerem padahal aman"
+        - "rem mendadak sendiri"
+        - "api-api"
+
+  FCW:
+    subfeatures:
+      - "warning"
+      - "false_positive"
+    subfeature_keywords:
+      warning:
+        - "peringatan tabrakan"
+        - "beep"
+        - "buzzer"
+        - "alert collision"
+      false_positive:
+        - "sering ngebeep"
+        - "sering bunyi"
+        - "beep beep padahal"
+        - "alarm palsu"
+
+  DMS:
+    subfeatures:
+      - "drowsiness"
+      - "distraction"
+    subfeature_keywords:
+      drowsiness:
+        - "ngantuk"
+        - "kantuk"
+        - "mata tertutup"
+        - "drowsiness"
+      distraction:
+        - "hp"
+        - "handphone"
+        - "melenceng"
+        - "distraction"
+        - "liat samping"
+
+  ALC:
+    subfeatures:
+      - "lane_change"
+      - "overtake"
+    subfeature_keywords:
+      lane_change:
+        - "pindah jalur sendiri"
+        - "ganti jalur otomatis"
+        - "lane change"
+        - "nyalip sendiri"
+      overtake:
+        - "nyalip"
+        - "overtake"
+        - "ngebut"
+
+  TSR:
+    subfeatures:
+      - "speed_limit"
+      - "accuracy"
+    subfeature_keywords:
+      speed_limit:
+        - "rambu kecepatan"
+        - "speed limit"
+        - "batas kecepatan"
+        - "rambu"
+      accuracy:
+        - "salah baca"
+        - "kadang salah"
+        - "telat baca"
+        - "nggak kebaca"
+
+  BSD:
+    subfeatures:
+      - "blind_spot"
+      - "change_lane_assist"
+      - "false_alarm"
+    subfeature_keywords:
+      blind_spot:
+        - "blind spot"
+        - "titik buta"
+        - "sensor samping"
+      change_lane_assist:
+        - "pindah jalur"
+        - "ganti lajur"
+        - "lane change"
+      false_alarm:
+        - "sering nyala"
+        - "sering bunyi"
+        - "kadang ganggu"
+
+  RCTA:
+    subfeatures:
+      - "reversing"
+    subfeature_keywords:
+      reversing:
+        - "mundur"
+        - "reversing"
+        - "parkir"
+        - "cross traffic"
+
+  RCW:
+    subfeatures:
+      - "rear_warning"
+    subfeature_keywords:
+      rear_warning:
+        - "dari belakang"
+        - "belakang"
+        - "rear"
+
+driving_scenarios:
+  highway_tol:
+    keywords:
+      - "tol"
+      - "highway"
+      - "jalan tol"
+      - "jalur tol"
+      - "jalan bebas hambatan"
+      - "freeway"
+      - "expressway"
+  urban_road:
+    keywords:
+      - "jalan kota"
+      - "urban"
+      - "perkotaan"
+      - "dalam kota"
+      - "jalan raya kota"
+  traffic_jam:
+    keywords:
+      - "macet"
+      - "traffic jam"
+      - "kemacetan"
+      - "padat"
+      - "kerapatan"
+      - "antrian"
+  stop_and_go:
+    keywords:
+      - "stop and go"
+      - "stop-and-go"
+      - "berhenti jalan"
+      - "mulai berhenti"
+  curve:
+    keywords:
+      - "tikungan"
+      - "belok"
+      - "curve"
+      - "corner"
+      - "virgins"
+      - "virging"
+  straight_road:
+    keywords:
+      - "jalan lurus"
+      - "straight"
+      - "lurus"
+  vehicle_cut_in:
+    keywords:
+      - "cut in"
+      - "cut-in"
+      - "potong jalur"
+      - "nyalip"
+      - "masuk depan"
+  vehicle_cut_out:
+    keywords:
+      - "cut out"
+      - "cut-out"
+      - "pindah jalur"
+      - "keluar jalur"
+  lead_vehicle_braking:
+    keywords:
+      - "mobil depan ngerem"
+      - "depan rem"
+      - "depan berhenti"
+      - "mobil depan brake"
+  lead_vehicle_accelerating:
+    keywords:
+      - "mobil depan gas"
+      - "mobil depan ngebut"
+      - "lead vehicle accelerate"
+  lane_change:
+    keywords:
+      - "lane change"
+      - "pindah jalur"
+      - "ganti jalur"
+  intersection:
+    keywords:
+      - "perempatan"
+      - "persimpangan"
+      - "intersection"
+      - "lampu merah"
+      - "traffic light"
+  pedestrian:
+    keywords:
+      - "pejalan kaki"
+      - "pedestrian"
+      - "orang jalan"
+  motorcycle:
+    keywords:
+      - "motor"
+      - "motorcycle"
+      - "motorcyclist"
+      - "pengendara motor"
+  slow_vehicle:
+    keywords:
+      - "mobil lambat"
+      - "slow vehicle"
+      - "kendaraan lambat"
+      - "truk"
+      - "bus"

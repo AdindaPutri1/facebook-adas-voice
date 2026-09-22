@@ -1,0 +1,41 @@
+# Secrets - never commit
+.env
+*.env
+cookies_*.json
+data/browser_profiles/
+logs/debug/
+
+# Data (raw collected content)
+data/raw/*.csv
+data/raw/*.jsonl
+data/clean/*.csv
+data/filtered/*.csv
+data/labeled/*.csv
+data/llm_cache.jsonl
+data/*.db
+data/**/*.db
+data/scraper_state.db
+
+# Logs
+logs/*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# V1 exports (dashboard only needs data/output/by_vehicle_v2)
+data/output/by_vehicle/
+data/output/raw_data_*
+data/output/clean_data_*
+data/output/labeled_experience.*
+data/output/customer_voice.*

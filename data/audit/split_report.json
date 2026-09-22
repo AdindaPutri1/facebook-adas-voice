@@ -1,0 +1,38 @@
+{
+  "rows_per_vehicle": {
+    "Jaecoo J5": {
+      "raw": 779,
+      "clean": 779,
+      "relevant": 0
+    },
+    "Toyota Yaris": {
+      "raw": 675,
+      "clean": 675,
+      "relevant": 0
+    },
+    "Toyota Zenix": {
+      "raw": 834,
+      "clean": 834,
+      "relevant": 10
+    },
+    "Toyota Veloz": {
+      "raw": 601,
+      "clean": 601,
+      "relevant": 10
+    },
+    "XPeng G6": {
+      "raw": 58,
+      "clean": 58,
+      "relevant": 0
+    },
+    "BYD Sealion 7": {
+      "raw": 1609,
+      "clean": 1609,
+      "relevant": 19
+    }
+  },
+  "unknown_or_review": 19,
+  "all_clean": 4556,
+  "all_relevant": 39,
+  "all_analyzed": 39
+}

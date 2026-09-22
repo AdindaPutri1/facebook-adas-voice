@@ -1,0 +1,144 @@
+vehicles:
+  jaecoo_j5:
+    canonical_name: "Jaecoo J5"
+    brand: "Jaecoo"
+    model: "J5"
+    aliases:
+      - "J5"
+      - "Jaecoo J 5"
+      - "jac j5"
+      - "jaecoo"
+    feature_terms:
+      PDA:
+        official: ["PDA", "Proactive Driving Assist", "Proactive Driving Assistance"]
+        functional: ["speed reduction", "curve assistance", "vehicle response", "pedestrian response"]
+        user_language: ["pda", "proactive driving"]
+      ACC:
+        official: ["ACC", "Adaptive Cruise Control", "Adaptive Cruise", "Cruise Control"]
+        functional: ["following distance", "stop and go", "cruise", "maintain speed"]
+        user_language: ["cruise control", "auto cruise"]
+    search_keywords:
+      - "Jaecoo J5 ADAS"
+      - "J5 ACC"
+      - "J5 PDA"
+      - "Jaecoo J5 adaptive cruise"
+      - "J5 fitur keselamatan"
+      - "Jaecoo J5 review"
+
+  toyota_yaris:
+    canonical_name: "Toyota Yaris"
+    brand: "Toyota"
+    model: "Yaris"
+    aliases:
+      - "Yaris"
+      - "toyota yaris cross"
+      - "yaris cross"
+    feature_terms:
+      PDA:
+        official: ["PDA", "Proactive Driving Assist"]
+        functional: ["pre-collision", "pedestrian detection", "lane departure"]
+        user_language: ["pda", "safety sense"]
+      ACC:
+        official: ["ACC", "Adaptive Cruise Control", "Dynamic Radar Cruise Control"]
+        functional: ["following distance", "stop and go", "cruise"]
+        user_language: ["cruise control", "radar cruise"]
+    search_keywords:
+      - "Toyota Yaris ADAS"
+      - "Yaris ACC"
+      - "Yaris PDA"
+      - "Yaris adaptive cruise"
+      - "Yaris safety sense"
+      - "Yaris TSS"
+
+  toyota_zenix:
+    canonical_name: "Toyota Zenix"
+    brand: "Toyota"
+    model: "Zenix"
+    aliases:
+      - "Zenix"
+      - "Veloz Zenix"
+    feature_terms:
+      PDA:
+        official: ["PDA", "Proactive Driving Assist"]
+        functional: ["pre-collision", "pedestrian detection"]
+        user_language: ["pda", "toyota safety sense"]
+      ACC:
+        official: ["ACC", "Adaptive Cruise Control", "Dynamic Radar Cruise Control"]
+        functional: ["following distance", "stop and go", "cruise"]
+        user_language: ["cruise control", "radar cruise"]
+    search_keywords:
+      - "Toyota Zenix ADAS"
+      - "Zenix ACC"
+      - "Zenix PDA"
+      - "Zenix adaptive cruise"
+      - "Zenix safety sense"
+
+  toyota_veloz:
+    canonical_name: "Toyota Veloz"
+    brand: "Toyota"
+    model: "Veloz"
+    aliases:
+      - "Veloz"
+      - "Avanza Veloz"
+    feature_terms:
+      PDA:
+        official: ["PDA", "Proactive Driving Assist"]
+        functional: ["pre-collision", "pedestrian detection"]
+        user_language: ["pda", "safety sense"]
+      ACC:
+        official: ["ACC", "Adaptive Cruise Control"]
+        functional: ["following distance", "cruise"]
+        user_language: ["cruise control"]
+    search_keywords:
+      - "Toyota Veloz ADAS"
+      - "Veloz ACC"
+      - "Veloz PDA"
+      - "Veloz adaptive cruise"
+
+  xpeng_g6:
+    canonical_name: "XPeng G6"
+    brand: "XPeng"
+    model: "G6"
+    aliases:
+      - "G6"
+      - "XPeng G 6"
+      - "xpg g6"
+    feature_terms:
+      PDA:
+        official: ["PDA", "NGP", "Navigation Guided Pilot"]
+        functional: ["intelligent driving", "highway assist", "speed adaptation"]
+        user_language: ["pda", "ngp", "pilot otonom", "autopilot"]
+      ACC:
+        official: ["ACC", "Adaptive Cruise Control", "LCC", "Lane Centering Control"]
+        functional: ["following distance", "stop and go", "cruise", "lane keeping"]
+        user_language: ["cruise control", "auto cruise", "lane keep"]
+    search_keywords:
+      - "XPeng G6 ADAS"
+      - "G6 ACC"
+      - "G6 NGP"
+      - "XPeng G6 autopilot"
+      - "G6 intelligent driving"
+
+  byd_sealion7:
+    canonical_name: "BYD Sealion 7"
+    brand: "BYD"
+    model: "Sealion 7"
+    aliases:
+      - "Sealion 7"
+      - "Sealion7"
+      - "SL7"
+    feature_terms:
+      PDA:
+        official: ["PDA", "DiPilot"]
+        functional: ["intelligent driving assist", "predictive safety"]
+        user_language: ["pda", "dipilot", "adas byd"]
+      ACC:
+        official: ["ACC", "Adaptive Cruise Control", "ICC", "Intelligent Cruise Control"]
+        functional: ["following distance", "stop and go", "cruise"]
+        user_language: ["cruise control", "auto cruise"]
+    search_keywords:
+      - "BYD Sealion 7 ADAS"
+      - "Sealion 7 ACC"
+      - "Sealion 7 PDA"
+      - "BYD Sealion adaptive cruise"
+      - "Sealion 7 DiPilot"

@@ -1,0 +1,72 @@
+pipeline:
+  version: "v2.0"
+  note: >
+    Konfigurasi pipeline reprocessing V2. Tidak ada scraping ulang; semua sumber
+    diambil dari artefak yang sudah ada di data/raw. File mentah tidak diubah.
+  output_root: "data/output/by_vehicle_v2"
+
+stages:
+  - audit_facebook_datasets
+  - build_master_dataset
+  - deduplicate_facebook_data
+  - clean_facebook_data
+  - classify_vehicle
+  - filter_adas_relevance
+  - classify_experience
+  - split_by_vehicle
+  - generate_summary
+
+master:
+  raw_dirs:
+    - "data/raw"
+  dedup:
+    primary_key: "record_id"
+    fallback_key:
+      - "community"
+      - "post_id"
+      - "comment_id"
+  max_raw_rows_warning: 20000
+
+cleaning:
+  strip_emojis: false
+  preserve_text_raw: true
+
+vehicle:
+  # prior dari kolom 'vehicle' pada hasil scraper (terikat komunitas)
+  context_prior_weight: medium
+  # alias yang menyebut brand+model dianggap bukti kuat
+  strong_alias_pattern: "brand_model"
+
+relevance:
+  min_text_length: 5
+  min_words_for_functional: 6
+  keyword_layer_warning_threshold: 5
+  generic_only_default: "uncertain"
+
+feature:
+  # Pilihan utama riset: PDA, ACC (+ kombinasi). Fitur lain = ADAS_OTHER.
+  target_features: ["PDA", "ACC"]
+  other_features:
+    - "LKA"
+    - "LDW"
+    - "LDP"
+    - "LCC"
+    - "ELK"
+    - "AEB"
+    - "FCW"
+    - "DMS"
+    - "ALC"
+    - "TSR"
+    - "BSD"
+    - "RCTA"
+    - "RCW"
+
+analysis_fields:
+  - "feature"
+  - "subfeature"
+  - "driving_scenario"
+  - "evidence_type"
+  - "sentiment"
+  - "smoothness"
+  - "expectation_mismatch"
+  - "feature_confidence"
